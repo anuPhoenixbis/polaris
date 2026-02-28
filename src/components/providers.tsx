@@ -16,7 +16,7 @@ export const Providers = ({children}:{children: React.ReactNode})=>{
             <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
                 <TooltipProvider>
                     <ThemeProvider
-                        attribute={'class'}
+                        attribute="class"
                         defaultTheme="dark"
                         enableSystem
                         disableTransitionOnChange
