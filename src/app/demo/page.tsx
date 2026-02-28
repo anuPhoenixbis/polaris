@@ -12,13 +12,21 @@ function DemoPage() {
     const [loading2,setLoading2] = useState(false)
     const handleBlocking = async() =>{
         setLoading(true);
-        await fetch("/api/demo/blocking",{method:"POST"})
-        setLoading(false);
+        try {
+            const res = await fetch("/api/demo/blocking",{method:"POST"})
+            if(!res.ok) throw new Error("Blocking req failed")
+        } finally{
+            setLoading(false);
+        }
     }
     const handleBackground = async() =>{
         setLoading2(true);
-        await fetch("/api/demo/background",{method:"POST"})
-        setLoading2(false);
+        try {
+            const res = await fetch("/api/demo/background",{method:"POST"})
+            if(!res.ok) throw new Error("Background req failed")
+        } finally{
+            setLoading2(false);
+        }
     }
   return (
     <div className="p-8 space-x-4">
