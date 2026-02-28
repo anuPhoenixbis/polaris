@@ -9,7 +9,13 @@ export async function POST(){
     try {
         const response = await generateText({
             model: google('gemini-2.5-flash'),
-            prompt: 'Write a vegetarian lasagna recipe for 4 people.'
+            prompt: 'Write a vegetarian lasagna recipe for 4 people.',
+            experimental_telemetry:{
+                // to keep track of the tokens used via vercel ai sdk
+                isEnabled:true,
+                recordInputs:true,
+                recordOutputs:true
+            }
         })
         // console.log(response)
         return Response.json({response})
