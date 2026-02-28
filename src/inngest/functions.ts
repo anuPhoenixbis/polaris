@@ -38,8 +38,25 @@ export const demoGenerate = inngest.createFunction(
     return await step.run("generate-text",async()=>{
         return await generateText({
             model: google('gemini-2.5-flash'),
-            prompt: finalPrompt
+            prompt: finalPrompt,
+            experimental_telemetry:{
+                // to keep track of the tokens used via vercel ai sdk
+                isEnabled:true,
+                recordInputs:true,
+                recordOutputs:true
+            }
         })
     })
   },
 );
+
+// error handling purpose
+export const demoError = inngest.createFunction(
+  {id:"demo-error"},
+  {event:"demo/error"},
+  async({step})=>{
+    await step.run("fail",async()=>{
+      throw new Error("Inngest error: Background job failed")
+    })
+  }
+)
