@@ -60,3 +60,55 @@ export const get = query({
         .collect()
     }
 })
+
+
+export const getById = query({
+    args:{
+        id:v.id("projects")
+    },
+    handler: async (ctx,args)=>{
+        // const identity = await ctx.auth.getUserIdentity()
+        // // get details about the currently authenticated user
+
+        // if(!identity) return []
+        const identity = await verifyAuth(ctx)
+
+        // its just like asking the an id from the projects table to return the project with the given id (its redundant)
+        const project = await ctx.db.get("projects",args.id)
+        //the get will also work without specifying the table name "projects" becoz the id here are ids from the projects table itself in the args
+
+        if(!project) throw new Error("Project not found")
+
+        if(project.ownerId !== identity.subject) throw new Error("Unauthorized access to this project")
+
+        return project
+    }
+})
+
+
+export const rename = mutation({
+    args:{
+        id:v.id("projects"),
+        name: v.string()
+    },
+    handler: async (ctx,args)=>{
+        // const identity = await ctx.auth.getUserIdentity()
+        // // get details about the currently authenticated user
+
+        // if(!identity) return []
+        const identity = await verifyAuth(ctx)
+
+        // its just like asking the an id from the projects table to return the project with the given id (its redundant)
+        const project = await ctx.db.get("projects",args.id)
+        //the get will also work without specifying the table name "projects" becoz the id here are ids from the projects table itself in the args
+
+        if(!project) throw new Error("Project not found")
+
+        if(project.ownerId !== identity.subject) throw new Error("Unauthorized access to this project")
+
+        await ctx.db.patch("projects",args.id,{
+            name:args.name,
+            updatedAt: Date.now()
+        })
+    }
+})
