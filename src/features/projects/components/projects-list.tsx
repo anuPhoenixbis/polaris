@@ -60,18 +60,20 @@ const ContinueCard = ({data}:{data:Doc<"projects">})=>(
 
 
 const ProjectItem = ({data}:{data:Doc<"projects">})=>(
-    <Link 
-        href={`/projects/${data._id}`}
-        className="text-sm text-foreground/60 font-medium hover:text-foreground py-1 flex items-center justify-between w-full group"
-    >
-        <div className="flex items-center gap-2">
-            {getProjectIcon(data)}
-            <span className="truncate">{data.name}</span>
-        </div>
-        <span className="text-xs text-muted-foreground group-hover:text-foreground/60 transition-colors">
-            {formatTimestamp(data.updatedAt)}
-        </span>
-    </Link>
+    <li>
+        <Link 
+            href={`/projects/${data._id}`}
+            className="text-sm text-foreground/60 font-medium hover:text-foreground py-1 flex items-center justify-between w-full group"
+        >
+            <div className="flex items-center gap-2">
+                {getProjectIcon(data)}
+                <span className="truncate">{data.name}</span>
+            </div>
+            <span className="text-xs text-muted-foreground group-hover:text-foreground/60 transition-colors">
+                {formatTimestamp(data.updatedAt)}
+            </span>
+        </Link>
+    </li>
 )
 
 function ProjectsList({
@@ -92,7 +94,7 @@ function ProjectsList({
         {rest.length > 0 && (
             <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between gap-2">
-                    <span className="text-xs text-muted-background">Recent Projects</span>
+                    <span className="text-xs text-muted-foreground">Recent Projects</span>
                     <button onClick={onViewAll} className="text-xs text-muted-foreground flex items-center gap-2 hover:text-foreground transition-colors">
                         <span>View All</span>
                         <Kbd className="bg-accent border">
@@ -101,7 +103,7 @@ function ProjectsList({
                     </button>
                 </div>
                 <ul>
-                    {projects.map((project)=>(
+                    {rest.map((project)=>(
                         <ProjectItem
                             key={project._id}
                             data={project}

@@ -45,9 +45,13 @@ function ProjectsCommandDialog({
         >
         <CommandInput placeholder='Search projects...'/>
         <CommandList>
+            {projects === undefined ? (
+            <div className="px-2 py-6 text-sm text-muted-foreground">Loading projects...</div>
+        ) : projects.length === 0 ? (
             <CommandEmpty>No projects found</CommandEmpty>
+        ) : (
             <CommandGroup heading="Projects">
-                {projects?.map((project)=>{
+            {projects.map((project)=>{
                     return <CommandItem 
                         key={project._id}
                         value={`${project.name}-${project._id}`}
@@ -57,6 +61,7 @@ function ProjectsCommandDialog({
                     </CommandItem>
                 })}
             </CommandGroup>
+        )}
         </CommandList>
     </CommandDialog>
   )

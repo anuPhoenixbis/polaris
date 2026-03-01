@@ -30,6 +30,9 @@ export const getPartial = query({
         // // get details about the currently authenticated user
 
         // if(!identity) return []
+        if(!Number.isInteger(args.limit) || args.limit<1 || args.limit>100){
+            throw new Error("limit must be an integer between 1 and 100")
+        }
         const identity = await verifyAuth(ctx)
 
         return await ctx.db

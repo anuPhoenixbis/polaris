@@ -28,7 +28,7 @@ export const useCreateProject = () =>{
                 const newProject = {
                     _id: crypto.randomUUID() as Id<"projects">,
                     _creationTime: now,
-                    name: args.name,
+                    name: args.name.trim(),
                     ownerId: "anonymous",
                     updatedAt: now
                 }
