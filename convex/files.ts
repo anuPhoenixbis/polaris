@@ -116,6 +116,15 @@ export const createFile = mutation({
             // check if the user is the actual owner of the project or not
         if(project.ownerId !== identity.subject) throw new Error("Unauthorized to access this project")
 
+        
+        // parent guarding
+        // rejecting invalid parent references
+        if(args.parentId){
+            const parent = await ctx.db.get("files",args.parentId)//get the parent
+            // basically if the parent is missing/the parent's projectId is not same as current projectId/parent's type is not a folder then throw the error
+            if(!parent || parent.projectId!== args.projectId || parent.type !== "folder") throw new Error("Invalid parent folder")
+        }
+
         // check if the same file already exists within the parent folder
         const files = await ctx.db
             .query("files")
@@ -168,6 +177,14 @@ export const createFolder = mutation({
 
             // check if the user is the actual owner of the project or not
         if(project.ownerId !== identity.subject) throw new Error("Unauthorized to access this project")
+
+        // parent guarding
+        // rejecting invalid parent references
+        if(args.parentId){
+            const parent = await ctx.db.get("files",args.parentId)//get the parent
+            // basically if the parent is missing/the parent's projectId is not same as current projectId/parent's type is not a folder then throw the error
+            if(!parent || parent.projectId!== args.projectId || parent.type !== "folder") throw new Error("Invalid parent folder")
+        }
 
         // check if the same folder already exists within the parent folder
         const files = await ctx.db
@@ -318,6 +335,9 @@ export const updateFile = mutation({
 
         const file = await ctx.db.get("files",args.id)
         if(!file) throw new Error("File not found")
+
+        // folders shouldn't be able to update their contents
+        if(file.type !== "file") throw new Error("Cannot update contents of a folder")
 
         const project = await ctx.db.get("projects",file.projectId) 
         if(!project) throw new Error("Project not found")

@@ -34,6 +34,7 @@ function TreeItemWrapper({
         {/* each file/folder is a ContextMenuItem */}
         <ContextMenuTrigger asChild>
             <button 
+                type="button"
                 onClick={onClick}
                 onDoubleClick={onDoubleClick}
                 onKeyDown={(e)=>{

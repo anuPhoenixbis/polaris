@@ -50,8 +50,16 @@ function FileExplorer({
         <ScrollArea>
             <div
                 role="button"
-                onClick={()=>setIsOpen(!isOpen)}
-                className='group/project cursor-pointer w-full text-left flex item-center gap-0.5 h-5.5 bg-accent font-bold'>
+                tabIndex={0}
+                onClick={()=>setIsOpen((value)=>!value)}
+                // keyboard toggle for the file explorer panel
+                onKeyDown={(e)=>{
+                    if(e.key === "Enter" || e.key === " "){
+                        e.preventDefault()
+                        setIsOpen((value)=>!value)
+                    }
+                }}
+                className='group/project cursor-pointer w-full text-left flex items-center gap-0.5 h-5.5 bg-accent font-bold'>
                     <ChevronRightIcon className={cn(
                         "size-4 shrink-0 text-muted-foreground",
                         isOpen && "rotate-90"

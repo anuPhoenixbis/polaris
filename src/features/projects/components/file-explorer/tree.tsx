@@ -31,7 +31,7 @@ function Tree({
     const folderContents = useFolderContents({
         projectId,
         parentId: item._id,
-        enabled: item.type === "folder" //&& isOpen//get the contents only when the item type is folder and is currently opened
+        enabled: item.type === "folder" && isOpen//get the contents only when the item type is folder and is currently opened
     })
 
     // to handle rename file/folder
@@ -108,7 +108,7 @@ function Tree({
     // component to be rendered when folder block is created
     const folderRender = (
         <>
-            <div className="flex items-center gap-0 5">
+            <div className="flex items-center gap-0.5">
                 <ChevronRightIcon
                     className={cn(
                         "size-4 shrink-0 text-muted-foreground",
