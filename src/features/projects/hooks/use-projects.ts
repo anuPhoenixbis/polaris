@@ -49,20 +49,20 @@ export const useCreateProject = () =>{
 }
 
 
-export const useRenameProject = (projectId: Id<"projects">) =>{
+export const useRenameProject = () =>{
     // projects creator
     return useMutation(api.projects.rename).withOptimisticUpdate(
         // optimistic update initially mutates and store the projects in the localStorage but after all the mutation have been done
         // the update is then pushed to the db for permanent updates
         (localStore,args)=>{//to update the create project window; block the user from making new projects until the prev project is made 
             const existingProject = localStore.getQuery(api.projects.getById,{
-                id: projectId
+                id: args.id
             })//pushing the current project to the localStorage of the browser
 
             if(existingProject !== undefined && existingProject !== null){//check if the project exists or not
                 localStore.setQuery(
                     api.projects.getById,
-                    {id:projectId},
+                    {id:args.id},
                     {
                         ...existingProject,
                         name: args.name,
