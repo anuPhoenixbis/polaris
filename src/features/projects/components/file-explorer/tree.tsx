@@ -9,6 +9,7 @@ import LoadingRow from './loading-row'
 import { getItemPadding } from './constants'
 import CreateInput from './create-input'
 import RenameInput from './rename-input'
+import { useEditor } from '@/features/editor/hooks/use-editor'
 
 function Tree({
     item,
@@ -27,6 +28,13 @@ function Tree({
     const createFile = useCreateFile()
     const deleteFile = useDeleteFile()
     const createFolder = useCreateFolder()
+
+    // get the hooks from the zustand store
+    const {
+        openFile,
+        closeTab,
+        activeTabId
+    } = useEditor(projectId)
 
     const folderContents = useFolderContents({
         projectId,
@@ -73,6 +81,7 @@ function Tree({
 
     if(item.type==="file") {
         const fileName = item.name
+        const isActive = activeTabId === item._id;//check for the activetab using the zustand store
 
         return (
             <>
@@ -88,12 +97,15 @@ function Tree({
                     <TreeItemWrapper
                         item={item}
                         level={level}
-                        isActive={false}
-                        onClick={()=>{}}
-                        onDoubleClick={()=>{}}
+                        isActive={isActive}
+                        onClick={()=>openFile(item._id,{pinned:false})}
+                        onDoubleClick={()=>openFile(item._id,{pinned : true})}
                         onRename={()=>setIsRenaming(true)}    // ← now this works
-                        onDelete={()=>{
-                            deleteFile({id: item._id})
+                        onDelete={async ()=>{
+                            // on deleting the file we'll just close the tab
+                            // close tab only after deleting the file
+                            await deleteFile({id: item._id})
+                            closeTab(item._id)
                         }}
                     >
                         <FileIcon fileName={fileName} autoAssign className='size-4'/>

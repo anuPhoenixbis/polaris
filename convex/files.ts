@@ -1,7 +1,7 @@
 import { v } from "convex/values"
 import { mutation, query } from "./_generated/server"
 import { verifyAuth } from "./auth"
-import { Id } from "./_generated/dataModel"
+import { Doc, Id } from "./_generated/dataModel"
 
 export const getFiles = query({
     args:{
@@ -91,6 +91,55 @@ export const getFolderContents = query({
             // within the same type , sort alphabetically
             return a.name.localeCompare(b.name)
         })
+    }
+})
+
+/*
+Builds the full path to a file by traversing up to the parent chain
+
+input: a file id
+output: array of ancestors from root to file: [{ _id, name: "src" },{
+_id, name: "components"},{ _id, name: "button.tsx" }]
+
+used for : breadcrumbs navigation (src > components > button.tsx)
+*/
+
+export const getFilePath = query({
+    args:{
+        id: v.id("files")
+    },
+    handler: async (ctx,args)=>{
+        // const identity = await ctx.auth.getUserIdentity()
+        // // get details about the currently authenticated user
+
+        // if(!identity) return []
+        const identity = await verifyAuth(ctx)
+
+
+        const file = await ctx.db.get("files",args.id)//get the project using the args projectId
+
+        if(!file) throw new Error("File not found")
+
+        const project = await ctx.db.get("projects",file.projectId)
+
+        if(!project) throw new Error("Project not found")
+
+            // check if the user is the actual owner of the project or not
+        if(project.ownerId !== identity.subject) throw new Error("Unauthorized to access this project")
+
+        const path : { _id:string;name:string}[] = [];//put out current path here
+        let currentId: Id<"files"> | undefined = args.id;
+
+        while(currentId){
+            const file = (await ctx.db.get("files",currentId)) as Doc<"files"> | undefined
+            if(!file) break;
+
+            path.unshift({ _id: file._id, name: file.name });//push in the current array elems' id and filename
+            // decrement the counter to move up the parent chain using the currentId as parentId 
+            currentId = file.parentId
+        }
+
+        return path
     }
 })
 
