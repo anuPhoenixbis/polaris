@@ -50,7 +50,7 @@ export const getLanguageExtension = (filename:string): Extension =>{
             return java();
         case "go":
             return go();
-        case "rust":
+        case "rs":
             return rust();
         default:
             return javascript();//fallback

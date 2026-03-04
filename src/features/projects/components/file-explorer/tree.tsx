@@ -101,10 +101,11 @@ function Tree({
                         onClick={()=>openFile(item._id,{pinned:false})}
                         onDoubleClick={()=>openFile(item._id,{pinned : true})}
                         onRename={()=>setIsRenaming(true)}    // ← now this works
-                        onDelete={()=>{
+                        onDelete={async ()=>{
                             // on deleting the file we'll just close the tab
+                            // close tab only after deleting the file
+                            await deleteFile({id: item._id})
                             closeTab(item._id)
-                            deleteFile({id: item._id})
                         }}
                     >
                         <FileIcon fileName={fileName} autoAssign className='size-4'/>
