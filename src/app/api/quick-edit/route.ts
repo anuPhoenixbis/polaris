@@ -105,7 +105,7 @@ export async function POST(request: Request){
 
             // adding the context together
             if(validResults.length > 0){
-                const documentationContext = `
+                documentationContext = `
                     # Reference Documentation & Context
                     The following external documentation and code patterns should be used to inform your suggestions:
 

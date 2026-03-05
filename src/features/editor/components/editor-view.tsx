@@ -15,6 +15,7 @@ function EditorView({projectId}:{projectId: Id<"projects">}) {
     const updateFile = useUpdateFile();
     // debounce timer using the timeout
     const timeoutRef = useRef<NodeJS.Timeout | null>(null)//setting up a timeout for when the re-initiate file updates
+    const pendingSaveRef = useRef<{id : Id<"files">; content: string} | null>(null) 
 
     const isActiveFileBinary = activeFile && activeFile.storageId 
     const isActiveFileText = activeFile && !activeFile.storageId
@@ -24,9 +25,14 @@ function EditorView({projectId}:{projectId: Id<"projects">}) {
         return ()=>{
             if(timeoutRef.current){
                 clearTimeout(timeoutRef.current)
+                timeoutRef.current = null
+            }
+            if(pendingSaveRef.current){
+                updateFile(pendingSaveRef.current)
+                pendingSaveRef.current = null;
             }
         }
-    },[activeTabId])
+    },[activeTabId,updateFile])
   return (
     <div className='h-full flex flex-col'>
         <div className="flex items-center">
@@ -51,9 +57,14 @@ function EditorView({projectId}:{projectId: Id<"projects">}) {
                     initialValue={activeFile.content}
                     onChange={(content: string)=>{
                         if(timeoutRef.current) clearTimeout(timeoutRef.current)//clearing out when multiple debounced updates are live
+                        pendingSaveRef.current = {id : activeFile._id, content}//saving the content if the debounce runs out before the file is saved using pendingSaveRef
                         
                         timeoutRef.current = setTimeout(()=>{
-                            updateFile({id: activeFile._id,content})//saving/updating the content of the file every 1.5 seconds
+                            if(pendingSaveRef.current){
+                                updateFile({id: activeFile._id,content})//saving/updating the content of the file every 1.5 seconds
+                                pendingSaveRef.current = null
+                            }
+                            timeoutRef.current = null
                         },DEBOUNCE_MS)
                     }}
                 />

@@ -54,7 +54,7 @@ export async function POST(request: Request){
             fileName,
             code,
             currentLine,
-            previousLine,
+            previousLines,
             textBeforeCursor,
             textAfterCursor,
             nextLines,
@@ -73,7 +73,7 @@ export async function POST(request: Request){
             .replace('{fileName}', fileName)
             .replace('{code}', code)
             .replace('{currentLine}', currentLine)
-            .replace('{previousLine}', previousLine || "")
+            .replace('{previousLines}', previousLines || "")
             .replace('{textBeforeCursor}', textBeforeCursor)
             .replace('{textAfterCursor}', textAfterCursor)
             .replace('{nextLines}', nextLines || "")
