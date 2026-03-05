@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Id } from '../../../../convex/_generated/dataModel'
 import TopNavigation from './top-navigation'
 import { useEditor } from '../hooks/use-editor'
@@ -18,6 +18,15 @@ function EditorView({projectId}:{projectId: Id<"projects">}) {
 
     const isActiveFileBinary = activeFile && activeFile.storageId 
     const isActiveFileText = activeFile && !activeFile.storageId
+
+    // cleanup pending debounced updates on unmount or file change 
+    useEffect(()=>{
+        return ()=>{
+            if(timeoutRef.current){
+                clearTimeout(timeoutRef.current)
+            }
+        }
+    },[activeTabId])
   return (
     <div className='h-full flex flex-col'>
         <div className="flex items-center">
@@ -41,7 +50,7 @@ function EditorView({projectId}:{projectId: Id<"projects">}) {
                     filename={activeFile.name} 
                     initialValue={activeFile.content}
                     onChange={(content: string)=>{
-                        if(timeoutRef.current) clearTimeout(timeoutRef.current)
+                        if(timeoutRef.current) clearTimeout(timeoutRef.current)//clearing out when multiple debounced updates are live
                         
                         timeoutRef.current = setTimeout(()=>{
                             updateFile({id: activeFile._id,content})//saving/updating the content of the file every 1.5 seconds
