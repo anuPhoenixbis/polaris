@@ -7,6 +7,9 @@ import {indentWithTab} from "@codemirror/commands"
 import { minimap } from '../extensions/minimap'
 import {indentationMarkers} from "@replit/codemirror-indentation-markers"
 import { customSetup } from '../extensions/custom-setup'
+import { suggestion } from '../extensions/suggestion'
+import { quickEdit } from '../extensions/quick-edit'
+import { selectionTooltip } from '../extensions/selection-tooltip'
 
 interface Props {
     filename: string,
@@ -37,6 +40,9 @@ function CodeEditor({
                 customTheme,
                 customSetup,
                 languageExtension,
+                suggestion(filename),//our own extension which will render ai code snippet suggestions
+                quickEdit(filename),//our own extension with ai edit modal
+                selectionTooltip(),//our own extension for tooltip for chat with ai/ edit code with ai
                 keymap.of([indentWithTab]),//to give tab indentation
                 minimap(),
                 indentationMarkers(),

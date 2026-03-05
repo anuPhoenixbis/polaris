@@ -55,9 +55,9 @@ const Tab = ({
             )}>
                 {fileName}
             </span>
-            <button
-                type="button"
-                aria-label={`Close ${fileName}`}
+            <div
+                // type="button"
+                // aria-label={`Close ${fileName}`}
                 onClick={(e)=>{
                     e.preventDefault()
                     e.stopPropagation();
@@ -76,7 +76,7 @@ const Tab = ({
                 )}
             >
                 <XIcon className='size-3.5' />
-            </button>
+            </div>
         </button>
     )
 }
