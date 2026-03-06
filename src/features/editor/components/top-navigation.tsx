@@ -5,8 +5,9 @@ import { useEditor } from '../hooks/use-editor'
 import { useFile } from '@/features/projects/hooks/use-files'
 import { cn } from '@/lib/utils'
 import { Spinner } from '@/components/ui/spinner'
-import { FileIcon } from '@react-symbols/icons/utils'
+import {FileIcon} from "@react-symbols/icons/utils"
 import { XIcon } from 'lucide-react'
+
 
 const Tab = ({
     fileId,
