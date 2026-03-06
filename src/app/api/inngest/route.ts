@@ -4,6 +4,7 @@ import {
   demoGenerate,
   demoError
  } from "@/inngest/functions";
+import { processMessage } from "@/features/conversations/inngest/process-message";
 
 // Create an API that serves zero functions
 export const { GET, POST, PUT } = serve({
@@ -11,6 +12,7 @@ export const { GET, POST, PUT } = serve({
   functions: [
     /* your functions will be passed here later! */
     demoGenerate,
-    demoError
+    demoError,
+    processMessage
   ],
 });
