@@ -42,7 +42,7 @@ export async function POST(request: Request){
 
     if(processingMessages.length===0){
         return NextResponse.json(
-            {success: true, cancelled: false}
+            {success: true, cancelled: false,cancelledMessageIds: []}
         )
     }
 
@@ -71,6 +71,6 @@ export async function POST(request: Request){
     return NextResponse.json({
         success: true,
         cancelled: true,
-        messageIds: cancelledIds
+        cancelledMessageIds: cancelledIds
     })
 }

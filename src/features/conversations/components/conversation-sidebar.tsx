@@ -100,7 +100,7 @@ function ConversationSidebar({projectId}:ConversationSidebarProps) {
         onSelect={setSelectedConversationId}//render the conversation using the conversationId
     />
         <div className='flex flex-col h-full bg-sidebar'>
-            <div className="h-8 75 flex items-center justify-between border-b">
+            <div className="h-8.75 flex items-center justify-between border-b">
                 <div className='text-sm truncate pl-3'>
                     {activeConversation?.title ?? DEFAULT_CONVERSATION_TITLE}
                 </div>

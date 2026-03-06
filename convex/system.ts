@@ -424,8 +424,8 @@ export const deleteFile = mutation({
             if(item.storageId) await ctx.storage.delete(item.storageId)
 
             await ctx.db.delete(fileId)//at last delete the parent file/folder itself
-
-            return args.fileId;
         }
+        await deleteRecursive(args.fileId)
+        return args.fileId;
     },
 })

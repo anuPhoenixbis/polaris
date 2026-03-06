@@ -10,7 +10,7 @@ interface DeleteFilesToolOptions{
 
 const paramsSchema = z.object({
     fileIds: z
-        .array(z.string().min(1,"File 1D cannot be empty"))
+        .array(z.string().min(1,"File ID cannot be empty"))
         .min(1,"Provide at least one file ID")
 });
 
@@ -69,7 +69,7 @@ export const createDeleteFilesTool = ({
                     return results.join("\n")
                 })
             } catch (error) {
-                return `Error deleteing files: ${error instanceof Error ? error.message : "Unknown error"}`
+                return `Error deleting files: ${error instanceof Error ? error.message : "Unknown error"}`
             }
         }
     })
