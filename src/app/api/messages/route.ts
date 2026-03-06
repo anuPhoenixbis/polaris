@@ -52,7 +52,36 @@ export async function POST(request: Request){
 
     const projectId = conversation.projectId;
     
-    // check for processing messages 
+    // check for previously processing messages so that we can shut them down and focus on running the latest one
+    // get the previously processing messages
+    const processingMessages = await convex.query(
+        api.system.getProcessingMessages,
+        {
+            internalKey,
+            projectId:projectId
+        }
+    )
+
+    if(processingMessages.length > 0){
+        // cancel all the processing messages and then we will create the new message
+        await Promise.all(//after cancelling they will return their cancelledIds
+            processingMessages.map(async (msg)=>{
+                await inngest.send({
+                    name: "message/cancel",//passing the event name
+                    data:{
+                        messageId: msg._id,//also the data id to cancel the this bg-job
+                    },
+                })
+
+                // this convex fn will tell that the message bg-job got cancelled here
+                await convex.mutation(api.system.updateMessageStatus,{
+                    internalKey,
+                    messageId: msg._id,
+                    status: "cancelled"
+                })
+            })
+        )
+    }
 
     // create user message
     await convex.mutation(api.system.createMessage,{
@@ -78,6 +107,9 @@ export async function POST(request: Request){
         name: "message/sent",
         data: {
             messageId: assistantMessageId,
+            conversationId,
+            projectId,
+            message,
         }
     })
 
