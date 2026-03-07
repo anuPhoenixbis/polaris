@@ -130,6 +130,14 @@ export const useWebContainer = ({
                         }
                     })
                 )
+
+                // to avoid failed start commands leave the hook stuck on "installing"
+                void devProcess.exit.then((exitCode)=>{
+                    if(exitCode!=0){
+                        setError(`${devCmd} failed with code ${exitCode}`)
+                        setStatus("error")
+                    }
+                })
             } catch (error) {
                 setError(error instanceof Error ? error.message : "Unknown error");
                 setStatus("error")
@@ -154,6 +162,7 @@ export const useWebContainer = ({
 
         for(const file of files){
             // if the file is anything other than a regular file (folder/binary file) then skip it
+            // purposely leaving empty files for web-containers
             if(file.type !== "file" || file.storageId || !file.content)continue;
 
             const filePath = getFilePath(file,filesMap)
@@ -164,6 +173,9 @@ export const useWebContainer = ({
     // reset when disabled
     useEffect(()=>{
         if(!enabled){
+            // teardown the container when preview is disabled
+            tearDownWebContainer();
+            containerRef.current = null;
             hasStartedRef.current = false;
             setStatus("idle");
             setPreviewUrl(null);

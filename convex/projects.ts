@@ -12,6 +12,9 @@ export const updateSettings = mutation({
         })
     },
     handler: async (ctx, args) => {
+        // no empty strings get passed
+        const installCommand = args.settings.installCommand?.trim() || undefined;
+        const devCommand = args.settings.devCommand?.trim() || undefined;
         const identity  = await verifyAuth(ctx);
 
         const project = await ctx.db.get("projects",args.id)
@@ -21,7 +24,10 @@ export const updateSettings = mutation({
         if(project.ownerId !== identity.subject) throw new Error("Unauthorized to update this project");
 
         await ctx.db.patch("projects",args.id,{
-            settings: args.settings,
+            settings: {
+                installCommand,
+                devCommand
+            },
             updatedAt: Date.now()
         })
     },

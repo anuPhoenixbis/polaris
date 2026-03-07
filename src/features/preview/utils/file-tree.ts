@@ -39,7 +39,9 @@ export const buildFileTree = (files: FileDoc[]): FileSystemTree =>{
 
             if(isLast){//for the last file/folder ,i.e., the root entity
                 if(file.type === "folder"){//if folder then make it an empty directory
-                    current[part] = {directory: {}}
+                    if(!current[part]){
+                        current[part] = {directory: {}}
+                    }
                 }else if(!file.storageId && file.content !== undefined){
                     // text files
                     current[part] = {file : {contents: file.content}}
