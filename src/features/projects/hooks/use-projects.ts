@@ -90,3 +90,8 @@ export const useRenameProject = () =>{
         }
     )
 }
+
+export const useUpdateProjectSettings = () =>{
+    // add optimistic mutation later
+    return  useMutation(api.projects.updateSettings);
+}

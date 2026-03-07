@@ -21,7 +21,13 @@ export default defineSchema({
                 v.literal("cancelled"),
             )
         ),
-        exportRepoUrl: v.optional(v.string())
+        exportRepoUrl: v.optional(v.string()),
+        settings: v.optional(//defining the terminal settings of the current projects to pass to the webcontainers for the terminal view
+            v.object({
+                installCommand: v.optional(v.string()),
+                devCommand: v.optional(v.string()),
+            })
+        )
     }).index("by_owner",["ownerId"]),//indexing based on ownerId 
 
     files:defineTable({
