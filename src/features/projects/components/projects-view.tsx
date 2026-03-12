@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/immutability */
 "use client"
 
 import { Button } from "@/components/ui/button"
@@ -8,16 +7,10 @@ import { SparkleIcon } from "lucide-react"
 import { Poppins } from "next/font/google"
 import {FaGithub} from 'react-icons/fa'
 import ProjectsList from "./projects-list"
-import { useCreateProject } from "../hooks/use-projects"
-import {
-    adjectives,
-    animals,
-    colors,
-    uniqueNamesGenerator
-} from "unique-names-generator"
 import { useEffect, useState } from "react"
 import ProjectsCommandDialog from "./projects-command-dialog"
 import ImportGithubDialog from "./import-github-dialog"
+import { NewProjectDialog } from "./new-project-dialog"
 
 
 const font = Poppins({
@@ -26,10 +19,10 @@ const font = Poppins({
 })
 
 function ProjectsView() {
-    const createProject = useCreateProject()
 
     const [commandDialogOpen,SetCommandDialogOpen] = useState(false)
     const [importDialogOpen,SetImportDialogOpen] = useState(false)
+    const [newProjectDialogOpen,SetNewProjectDialogOpen] = useState(false)
 
     // to open the search project modal via keys
     useEffect(()=>{
@@ -42,6 +35,10 @@ function ProjectsView() {
                 if(e.key==='i'){
                     e.preventDefault()
                     SetImportDialogOpen(true)
+                }
+                if(e.key==='j'){
+                    e.preventDefault()
+                    SetNewProjectDialogOpen(true)
                 }
             }
         }
@@ -59,6 +56,10 @@ function ProjectsView() {
             open={importDialogOpen}
             onOpenChange={SetImportDialogOpen}
         />
+        <NewProjectDialog 
+            open={newProjectDialogOpen}
+            onOpenChange={SetNewProjectDialogOpen}
+        />
         <div className="min-h-screen bg-sidebar flex flex-col items-center justify-center p-6 md:p-16">
             <div className="w-full max-w-sm mx-auto flex flex-col gap-4 items-center">
                 <div className="flex justify-between gap-4 w-full items-center">
@@ -74,20 +75,7 @@ function ProjectsView() {
                         {/* project creation button */}
                         <Button
                             variant="outline"
-                            onClick={()=>{
-                                const projectName = uniqueNamesGenerator({
-                                    dictionaries:[
-                                        adjectives,
-                                        animals,
-                                        colors
-                                    ],
-                                    separator:"-",
-                                    length: 3
-                                })
-                                createProject({
-                                    name: projectName
-                                })
-                            }}
+                            onClick={()=>SetNewProjectDialogOpen(true)}
                             className="h-full items-start justify-start p-4 bg-background border flex flex-col gap-6 rounded-none">
                                 <div className="flex items-center justify-between w-full">
                                     <SparkleIcon className="size-4"/>

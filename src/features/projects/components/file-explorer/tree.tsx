@@ -24,9 +24,15 @@ function Tree({
     const [isRenaming,setIsRenaming] = useState(false)
     const [creating,setCreating] = useState<"file"|"folder"|null>(null)
 
-    const renameFile = useRenameFile()
+    const renameFile = useRenameFile({
+        projectId,
+        parentId: item.parentId
+    })
     const createFile = useCreateFile()
-    const deleteFile = useDeleteFile()
+    const deleteFile = useDeleteFile({
+        projectId,
+        parentId: item.parentId
+    })
     const createFolder = useCreateFolder()
 
     // get the hooks from the zustand store

@@ -20,7 +20,8 @@ function parseGithubUrl(url:string){
 }
 
 export async function POST(request: Request){
-    const {userId} = await auth()
+    // has arg checks if the userId uses pro plan or not
+    const {userId,has} = await auth()
 
     if(!userId){
         return NextResponse.json({
@@ -28,6 +29,12 @@ export async function POST(request: Request){
         },{
             status: 401
         })
+    }
+
+    // pro plan check
+    const hasPro = has({ plan: "pro"})
+    if(!hasPro){
+        return NextResponse.json({ error: "Pro plan required"}, {status: 403})
     }
 
     const body = await request.json()

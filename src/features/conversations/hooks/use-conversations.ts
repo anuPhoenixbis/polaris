@@ -19,6 +19,5 @@ export const useConversations = (projectId : Id<"projects">) =>{
 }
 
 export const useCreateConversation = () =>{
-    return useMutation(api.conversations.create)
-    // add optimistic mutation later
+    return useMutation(api.conversations.create);
 }
