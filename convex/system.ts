@@ -612,9 +612,12 @@ export const createProjectWithConversation = mutation({
     },handler: async(ctx, args)=> {
         validateInternalKey(args.internalKey)
 
+        const name = args.projectName.trim()
+        if(!name) throw new Error("Project name is required")
+
         const now = Date.now()
         const projectId = await ctx.db.insert("projects",{
-            name: args.projectName,
+            name,
             ownerId: args.ownerId,
             updatedAt: now,
         })

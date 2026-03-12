@@ -31,8 +31,23 @@ export async function POST(request: Request){
         )
     }
 
-    const body = await request.json()
-    const {prompt} = requestSchema.parse(body);
+    let body;
+    try {
+        body = await request.json()
+    } catch {
+        return NextResponse.json(
+            {error: "Invalid JSON body"},
+            {status: 400}
+        )
+    }
+    const parsed = requestSchema.safeParse(body);
+    if(!parsed.success){
+        return NextResponse.json(
+            {error: "Invalid request", details: parsed.error.flatten()},
+            {status: 400}
+        )
+    }
+    const {prompt} = parsed.data;
 
     // generate random project names
     const projectName = uniqueNamesGenerator({
