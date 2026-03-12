@@ -25,7 +25,7 @@ function Navbar({
     projectId: Id<"projects">
 }) {
     const project = useProject(projectId)//get the project via the project id
-    const renameProject = useRenameProject(projectId);
+    const renameProject = useRenameProject();
 
     const [isRenaming,setIsRenaming] = useState(false)
     const [name,setName] = useState("")
