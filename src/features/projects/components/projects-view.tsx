@@ -17,6 +17,7 @@ import {
 } from "unique-names-generator"
 import { useEffect, useState } from "react"
 import ProjectsCommandDialog from "./projects-command-dialog"
+import ImportGithubDialog from "./import-github-dialog"
 
 
 const font = Poppins({
@@ -28,6 +29,7 @@ function ProjectsView() {
     const createProject = useCreateProject()
 
     const [commandDialogOpen,SetCommandDialogOpen] = useState(false)
+    const [importDialogOpen,SetImportDialogOpen] = useState(false)
 
     // to open the search project modal via keys
     useEffect(()=>{
@@ -36,6 +38,10 @@ function ProjectsView() {
                 if(e.key==='k'){
                     e.preventDefault()
                     SetCommandDialogOpen(true)//to open the search projects modal via keys
+                }
+                if(e.key==='i'){
+                    e.preventDefault()
+                    SetImportDialogOpen(true)
                 }
             }
         }
@@ -48,6 +54,10 @@ function ProjectsView() {
         <ProjectsCommandDialog
             open={commandDialogOpen}
             onOpenChange={SetCommandDialogOpen}
+        />
+        <ImportGithubDialog 
+            open={importDialogOpen}
+            onOpenChange={SetImportDialogOpen}
         />
         <div className="min-h-screen bg-sidebar flex flex-col items-center justify-center p-6 md:p-16">
             <div className="w-full max-w-sm mx-auto flex flex-col gap-4 items-center">
@@ -94,7 +104,7 @@ function ProjectsView() {
                         {/* project creation button */}
                         <Button
                             variant="outline"
-                            onClick={()=>{}}
+                            onClick={()=>SetImportDialogOpen(true)}
                             className="h-full items-start justify-start p-4 bg-background border flex flex-col gap-6 rounded-none">
                                 <div className="flex items-center justify-between w-full">
                                     <FaGithub className="size-4"/>
