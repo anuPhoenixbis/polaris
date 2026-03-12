@@ -430,6 +430,8 @@ export const deleteFile = mutation({
     },
 })
 
+// this is fine for small repos but for huge repos like >50k files would exceed the convex limits
+// we must use batch cleanup for this provided by convex
 // to clear out any files before import the files from the github to the current polaris project
 export const cleanup = mutation({
     args:{
@@ -452,8 +454,8 @@ export const cleanup = mutation({
 
             await ctx.db.delete(file._id)//delete all the other files/folders as well
 
-            return {deleted: files.length}
         }
+        return {deleted: files.length}
     },
 })
 
